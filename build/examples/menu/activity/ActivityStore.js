@@ -1,7 +1,7 @@
 Ext.define('activity.ActivityStore', {
 	extend : 'Ext.data.Store',
 	alias : 'activity.ActivityStore',
-fields : ['id','activityName', 'specialName', 'description', 'rushBeginTime', 'rushEndTime', 'rushStatus'],
+fields : ['id','activityName', 'specialName', 'description', 'rushBeginTime', 'rushEndTime', 'rushStatus','imgUrl','userName','entertime'],
 	autoLoad : true,
 	pageSize : 30,
 	proxy : {

@@ -1,5 +1,5 @@
 Ext.require(['Ext.grid.*', 'Ext.data.*', 'Ext.util.*', 'Ext.Action', 'Ext.data.*', 
-'Ext.toolbar.*','form.FieldTypes','product.Grid','activity.ActivityStore','activity.ActivityModel']);
+'Ext.toolbar.*','form.FieldTypes','product.Grid','activity.ActivityStore']);
 
 Ext.onReady(function() {
 	Ext.QuickTips.init();
@@ -36,26 +36,25 @@ Ext.onReady(function() {
 	// create the data store
 	var store = Ext.create('activity.ActivityStore', {
 	});
-	
-	var store = Ext.create('Ext.data.ArrayStore', {
-		fields : [{
-			name : 'company'
-		}, {
-			name : 'price',
-			type : 'float'
-		}, {
-			name : 'change',
-			type : 'float'
-		}, {
-			name : 'pctChange',
-			type : 'float'
-		}, {
-			name : 'lastChange',
-			type : 'date',
-			dateFormat : 'n/j h:ia'
-		}],
-		data : myData
-	});
+//	var store = Ext.create('Ext.data.ArrayStore', {
+//		fields : [{
+//			name : 'company'
+//		}, {
+//			name : 'price',
+//			type : 'float'
+//		}, {
+//			name : 'change',
+//			type : 'float'
+//		}, {
+//			name : 'pctChange',
+//			type : 'float'
+//		}, {
+//			name : 'lastChange',
+//			type : 'date',
+//			dateFormat : 'n/j h:ia'
+//		}],
+//		data : myData
+//	});
 
 	var sellAction = Ext.create('Ext.Action', {
 		icon : '../shared/icons/fam/delete.gif', // Use a URL in the icon config
@@ -131,34 +130,50 @@ Ext.onReady(function() {
 		store : store,
 		columnLines : true,
 		columns : [{
-			text : 'Company',
-			flex : 1,
+			text : '活动名称',
+			width : 150,
 			sortable : false,
-			dataIndex : 'company'
+			dataIndex : 'activityName'
 		}, {
-			text : 'Price',
-			width : 75,
-			sortable : true,
-			formatter : 'usMoney',
-			dataIndex : 'price'
+			text : '专场名称',
+			width : 150,
+			sortable : false,
+			dataIndex : 'specialName'
 		}, {
-			text : 'Change',
-			width : 75,
-			sortable : true,
-			renderer : change,
-			dataIndex : 'change'
+			text : '描述',
+			width : 200,
+			sortable : false,
+			dataIndex : 'description'
 		}, {
-			text : '% Change',
-			width : 75,
-			sortable : true,
-			renderer : pctChange,
-			dataIndex : 'pctChange'
+			text : '抢购时间',
+			width : 150,
+			sortable : false,
+			dataIndex : 'rushBeginTime'
 		}, {
-			text : 'Last Updated',
-			width : 85,
-			sortable : true,
-			formatter : 'date("m/d/Y")',
-			dataIndex : 'lastChange'
+			text : '结束时间',
+			width : 150,
+			sortable : false,
+			dataIndex : 'rushEndTime'
+		}, {
+			text : '抢购状态',
+			width : 150,
+			sortable : false,
+			dataIndex : 'rushStatus'
+		}, {
+			text : '图片预览',
+			width : 150,
+			sortable : false,
+			dataIndex : 'imgUrl'
+		},{
+			text : '创建人',
+			width : 150,
+			sortable : false,
+			dataIndex : 'userName'
+		},{
+			text : '录入时间',
+			width : 150,
+			sortable : false,
+			dataIndex : 'entertime'
 		}],
 		dockedItems : [{
 			xtype : 'toolbar',
