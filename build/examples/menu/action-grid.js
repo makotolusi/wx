@@ -1,4 +1,5 @@
-Ext.require(['Ext.grid.*', 'Ext.data.*', 'Ext.util.*', 'Ext.Action', 'Ext.data.*', 'Ext.toolbar.*','form.FieldTypes','product.Grid']);
+Ext.require(['Ext.grid.*', 'Ext.data.*', 'Ext.util.*', 'Ext.Action', 'Ext.data.*', 
+'Ext.toolbar.*','form.FieldTypes','product.Grid','activity.ActivityStore','activity.ActivityModel']);
 
 Ext.onReady(function() {
 	Ext.QuickTips.init();
@@ -33,6 +34,9 @@ Ext.onReady(function() {
 	}
 
 	// create the data store
+	var store = Ext.create('activity.ActivityStore', {
+	});
+	
 	var store = Ext.create('Ext.data.ArrayStore', {
 		fields : [{
 			name : 'company'
