@@ -109,14 +109,24 @@ Ext.onReady(function() {
 			var rec = grid.getSelectionModel().getSelection()[0];
 			if (rec) {
 					//create window
-	var win=Ext.create('Ext.window.Window', {
-    title: '绑定产品',
-    height: 500,
-    width: 600,
-    layout: 'fit',
-    items: {xtype:'grid-product'}
-}).show();
-				Ext.example.msg('Buy', 'Buy ' + rec.get('company'));
+				
+				var win=Ext.create('Ext.window.Window', {
+				    title: '绑定产品',
+				    height: 600,
+				    width: 700,
+				    layout: 'fit',
+				    items: {xtype:'grid-product'}
+				}).show();
+				Ext.getCmp('productGrid').getSelectionModel().on({
+					selectionchange : function(sm, selections) {
+						if (selections.length) {
+							Ext.getCmp('bindBtn').enable();
+						} else {
+							Ext.getCmp('bindBtn').disable();
+						}
+					}
+				});
+//				Ext.example.msg('Buy', 'Buy ' + rec.get('company'));
 			}
 		}
 	});
@@ -224,17 +234,19 @@ Ext.onReady(function() {
 
 
 
-	grid.getSelectionModel().on({
-		selectionchange : function(sm, selections) {
-			if (selections.length) {
-				buyAction.enable();
-				sellAction.enable();
-					updateAction.enable();
-			} else {
-				buyAction.disable();
-				sellAction.disable();
-					updateAction.disable();
-			}
-		}
-	});
+
+							grid.getSelectionModel().on({
+				selectionchange : function(sm, selections) {
+					if (selections.length) {
+						buyAction.enable();
+						sellAction.enable();
+						updateAction.enable();
+					} else {
+						buyAction.disable();
+						sellAction.disable();
+						updateAction.disable();
+					}
+				}
+			});
+	
 });
