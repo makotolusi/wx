@@ -6,7 +6,7 @@ fields : ['id','activityName', 'specialName', 'description', 'rushBeginTime', 'r
 	pageSize : 30,
 	proxy : {
 		type : 'ajax',
-		url : 'http://localhost:8080/wx/activityext/items',
+		url : 'http://localhost:8080/mgserver/activityext/items',
 		paramsAsJson : true,
 		actionMethods : {
 			read : "POST"

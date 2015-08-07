@@ -1,18 +1,22 @@
 /**
  * This example shows examples of the various supported form field types.
  */
-Ext.require([ 'product.ProductStore' ]);
+Ext.require([ 'product.ProductStore']);
 
 Ext.define('product.Grid', {
 	extend : 'Ext.grid.Panel',
 	xtype : 'grid-product',
 	 id:"productGrid",  
+	me:this,
 	// <example>
 	requires : [ 'Ext.grid.*', 'Ext.data.*', 'Ext.util.*', 'Ext.Action',
 			'Ext.data.*', 'Ext.toolbar.*', 'form.FieldTypes' ],
 
-	store : Ext.create('product.ProductStore', {}),
+	
+
+
 	columnLines : true,
+	multiSelect : true,
 	columns : [ {
 		text : '产品代码',
 		width : 100,
@@ -68,7 +72,40 @@ Ext.define('product.Grid', {
 			id:'bindBtn',
 			disabled : true,
 			handler : function(widget, event) {
-				console.log('1111111')
+				var obj={};
+				var pGrid=Ext.getCmp('productGrid');
+				var pRows=pGrid.getSelectionModel().getSelection();
+				var pids='';
+				var pcodes='';
+						for (var i = 0; i < pRows.length; i++) {
+							pids+=pRows[i].get('id')+",";
+								pcodes+=pRows[i].get('productCode')+",";
+						
+						}
+				obj.activityId=pGrid.activityId;
+				obj.productIds=pids;
+				obj.productCodes=pcodes;
+						console.log(obj);
+				Ext.Ajax.request({
+					url : ROOT_URL + '/activityext/yesguanlianproduct',
+					method : 'POST',
+					params :   {activityId: 6, productIds: "1", productCodes: "M000001"},
+					success : function(response) {
+						var text = response.responseText;
+						console.log(text);
+						Ext.MessageBox.alert('提示', '创建成功', function() {
+							win.close();
+						}, this);
+
+					},
+					failure : function(response) {
+						var text = response.responseText;
+						console.log(text);
+						Ext.MessageBox.alert('提示', '创建失败-' + text, function() {
+							win.close();
+						}, this);
+					}
+				});
 			}
 		}) ]
 	}, {

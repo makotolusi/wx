@@ -1,12 +1,12 @@
-Ext.define('product.ProductStore', {
+Ext.define('activity.ActivityProductStore', {
 	extend : 'Ext.data.Store',
-	alias : 'product.ProductStore',
-fields : ['id','productCode', 'name', 'description', 'price', 'quantity', 'experience','currency','userName','entertime','systemName'],
+	alias : 'activity.ActivityProductStore',
+fields : ['id','activityId','productCode', 'productName', 'rushPrice', 'rushQuantity', 'bargainPrice','sortNum','status','imageUrl'],
 	autoLoad : true,
 	pageSize : 10,
 	proxy : {
 		type : 'ajax',
-		url :  ROOT_URL + '/productMaintenance/items',
+		// url :  ROOT_URL + '/activityext/getactivityproducts/1',
 		paramsAsJson : true,
 		actionMethods : {
 			read : "POST"

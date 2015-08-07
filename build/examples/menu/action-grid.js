@@ -1,6 +1,5 @@
-Ext.require(['Ext.grid.*', 'Ext.data.*', 'Ext.util.*', 'Ext.Action', 'Ext.data.*', 
-'Ext.toolbar.*','form.FieldTypes','product.Grid','activity.ActivityStore']);
-
+Ext.require(['Ext.grid.*', 'Ext.data.*', 'Ext.util.*', 'Ext.Action', 'Ext.data.*', 'Ext.toolbar.*', 'form.FieldTypes', 'product.Grid', 'activity.ActivityStore', 'Global', 'activity.ActivityProductGrid']);
+var ROOT_URL = 'http://localhost:8080/mgserver';
 Ext.onReady(function() {
 	Ext.QuickTips.init();
 
@@ -36,25 +35,6 @@ Ext.onReady(function() {
 	// create the data store
 	var store = Ext.create('activity.ActivityStore', {
 	});
-//	var store = Ext.create('Ext.data.ArrayStore', {
-//		fields : [{
-//			name : 'company'
-//		}, {
-//			name : 'price',
-//			type : 'float'
-//		}, {
-//			name : 'change',
-//			type : 'float'
-//		}, {
-//			name : 'pctChange',
-//			type : 'float'
-//		}, {
-//			name : 'lastChange',
-//			type : 'date',
-//			dateFormat : 'n/j h:ia'
-//		}],
-//		data : myData
-//	});
 
 	var sellAction = Ext.create('Ext.Action', {
 		icon : '../shared/icons/fam/delete.gif', // Use a URL in the icon config
@@ -63,7 +43,22 @@ Ext.onReady(function() {
 		handler : function(widget, event) {
 			var rec = grid.getSelectionModel().getSelection()[0];
 			if (rec) {
-				Ext.example.msg('Sell', 'Sell ' + rec.get('company'));
+				//create window
+				var win = Ext.create('Ext.window.Window', {
+					title : '绑定产品',
+					height : 600,
+					width : 700,
+					layout : 'fit',
+					items : {
+						xtype : 'grid-activity-product',
+						store : Ext.create('activity.ActivityProductStore', {
+							proxy : {
+								url : ROOT_URL + '/activityext/getactivityproducts/'+rec.get('id')
+							}
+						}),
+						activityId : rec.get('id')
+					}
+				}).show();
 			}
 		}
 	});
@@ -86,16 +81,16 @@ Ext.onReady(function() {
 		handler : function(widget, event) {
 			var rec = grid.getSelectionModel().getSelection()[0];
 			if (rec) {
-					//create window
-	var updateActivityWin=Ext.create('Ext.window.Window', {
-    title: '修改活动',
-    height: 600,
-    width: 500,
-    layout: 'fit',
-    items:{
-    	xtype:'form-fieldtypes'
-    }
-}).show();
+				//create window
+				var updateActivityWin = Ext.create('Ext.window.Window', {
+					title : '修改活动',
+					height : 600,
+					width : 500,
+					layout : 'fit',
+					items : {
+						xtype : 'form-fieldtypes'
+					}
+				}).show();
 				Ext.example.msg('Sell', 'Sell ' + rec.get('company'));
 			}
 		}
@@ -108,14 +103,20 @@ Ext.onReady(function() {
 		handler : function(widget, event) {
 			var rec = grid.getSelectionModel().getSelection()[0];
 			if (rec) {
-					//create window
-				
-				var win=Ext.create('Ext.window.Window', {
-				    title: '绑定产品',
-				    height: 600,
-				    width: 700,
-				    layout: 'fit',
-				    items: {xtype:'grid-product'}
+				//create window
+
+				var win = Ext.create('Ext.window.Window', {
+					title : '绑定产品',
+					height : 600,
+					width : 700,
+					layout : 'fit',
+					items : {
+						xtype : 'grid-product',
+						store : Ext.create('product.ProductStore', {
+
+						}),
+						activityId : rec.get('id')
+					}
 				}).show();
 				Ext.getCmp('productGrid').getSelectionModel().on({
 					selectionchange : function(sm, selections) {
@@ -126,7 +127,7 @@ Ext.onReady(function() {
 						}
 					}
 				});
-//				Ext.example.msg('Buy', 'Buy ' + rec.get('company'));
+				//				Ext.example.msg('Buy', 'Buy ' + rec.get('company'));
 			}
 		}
 	});
@@ -174,12 +175,12 @@ Ext.onReady(function() {
 			width : 150,
 			sortable : false,
 			dataIndex : 'imgUrl'
-		},{
+		}, {
 			text : '创建人',
 			width : 150,
 			sortable : false,
 			dataIndex : 'userName'
-		},{
+		}, {
 			text : '录入时间',
 			width : 150,
 			sortable : false,
@@ -225,28 +226,23 @@ Ext.onReady(function() {
 		stateful : false
 	});
 
-//product list
+	//product list
 	var products = Ext.create('Ext.grid.Panel', {
-	
+
 	});
 
+	grid.getSelectionModel().on({
+		selectionchange : function(sm, selections) {
+			if (selections.length) {
+				buyAction.enable();
+				sellAction.enable();
+				updateAction.enable();
+			} else {
+				buyAction.disable();
+				sellAction.disable();
+				updateAction.disable();
+			}
+		}
+	});
 
-
-
-
-
-							grid.getSelectionModel().on({
-				selectionchange : function(sm, selections) {
-					if (selections.length) {
-						buyAction.enable();
-						sellAction.enable();
-						updateAction.enable();
-					} else {
-						buyAction.disable();
-						sellAction.disable();
-						updateAction.disable();
-					}
-				}
-			});
-	
 });
