@@ -87,6 +87,13 @@ Ext.define('activity.ActivityProductGrid', {
                 allowBlank: false
             },
 		dataIndex : 'sortNum'
+	},
+	{
+		text : '22',
+		width : 100,
+		hidden:true,
+		sortable : false,
+		dataIndex : 'status'
 	},{
 			text : "操作",
 			xtype : 'actioncolumn',
@@ -96,7 +103,7 @@ Ext.define('activity.ActivityProductGrid', {
                 tooltip: '启停',
                 getClass : function(v, meta, record) {
     				console.log(record.get('status'));
-    				if (record.get('status') == '0') {
+    				if (record.get('status') == '0'||record.get('status') == undefined) {
     					return 'icon-cancel';
     				} else {
     					return 'icon-ok';
@@ -106,6 +113,7 @@ Ext.define('activity.ActivityProductGrid', {
                 	var rec = grid.getStore().getAt(rowIndex);
     				var str = '';
     				var status=0;
+    				console.log(rec.get('status'));
     				if (rec.get('status') == '1') {
     					str = "确认停用吗?";
     					status=0;
@@ -182,7 +190,9 @@ Ext.define('activity.ActivityProductGrid', {
 						var text = response.responseText;
 						console.log(text);
 						Ext.MessageBox.alert('提示', '创建成功', function() {
-							win.close();
+							var p = Ext.getCmp('activityProductGrid');
+							p.getStore().reload();
+							Ext.getCmp('avtivity-product-bind-win').close();
 						}, this);
 
 					},
@@ -190,7 +200,9 @@ Ext.define('activity.ActivityProductGrid', {
 						var text = response.responseText;
 						console.log(text);
 						Ext.MessageBox.alert('提示', '创建失败-' + text, function() {
-							win.close();
+							var p = Ext.getCmp('activityProductGrid');
+							p.getStore().reload();
+							Ext.getCmp('avtivity-product-bind-win').close();
 						}, this);
 					}
 				});
@@ -199,6 +211,7 @@ Ext.define('activity.ActivityProductGrid', {
 	}, {
 		xtype : 'pagingtoolbar',
 		dock : 'bottom',
+		store:me.store,
 		displayInfo : true
 	} ],
 	viewConfig : {

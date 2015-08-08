@@ -3,20 +3,20 @@ Ext.define('product.ProductStore', {
 	alias : 'product.ProductStore',
 fields : ['id','productCode', 'name', 'description', 'price', 'quantity', 'experience','currency','userName','entertime','systemName'],
 	autoLoad : true,
-	pageSize : 10,
+	pageSize : 20,
 	proxy : {
 		type : 'ajax',
-		url :  ROOT_URL + '/productMaintenance/items',
-		paramsAsJson : true,
+		url :  ROOT_URL + '/productMaintenance/itemsforext',
+//		paramsAsJson : true,
 		actionMethods : {
 			read : "POST"
 		},
 		extraParams : {
 		},
-		headers : {
-			'Content-Type' : 'application/json; charset=utf-8',
-			'Accept' : 'application/json'
-		},
+//		headers : {
+//			'Content-Type' : 'application/json; charset=utf-8',
+//			'Accept' : 'application/json'
+//		},
 		reader : {
 			type : 'json',
 			rootProperty : 'rows',

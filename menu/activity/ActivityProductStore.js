@@ -7,15 +7,11 @@ fields : ['id','activityId','productCode', 'productName', 'rushPrice', 'rushQuan
 	proxy : {
 		type : 'ajax',
 		// url :  ROOT_URL + '/activityext/getactivityproducts/1',
-		paramsAsJson : true,
+//		paramsAsJson : true,
 		actionMethods : {
 			read : "POST"
 		},
 		extraParams : {
-		},
-		headers : {
-			'Content-Type' : 'application/json; charset=utf-8',
-			'Accept' : 'application/json'
 		},
 		reader : {
 			type : 'json',

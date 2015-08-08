@@ -2,21 +2,21 @@ Ext.define('activity.ActivityStore', {
 	extend : 'Ext.data.Store',
 	alias : 'activity.ActivityStore',
 fields : ['id','activityName', 'specialName', 'description', 'rushBeginTime', 'rushEndTime', 'rushStatus','imgUrl','userName','entertime'],
-	autoLoad : true,
-	pageSize : 30,
+	autoLoad :true,
+	pageSize : 10,
 	proxy : {
 		type : 'ajax',
 		url : 'http://localhost:8080/mgserver/activityext/items',
-		paramsAsJson : true,
+//		paramsAsJson : true,
 		actionMethods : {
 			read : "POST"
 		},
 		extraParams : {
 		},
-		headers : {
-			'Content-Type' : 'application/json; charset=utf-8',
-			'Accept' : 'application/json'
-		},
+//		headers : {
+//			'Content-Type' : 'application/json; charset=utf-8',
+//			'Accept' : 'application/json'
+//		},
 		reader : {
 			type : 'json',
 			rootProperty : 'rows',

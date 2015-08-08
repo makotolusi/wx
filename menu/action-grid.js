@@ -50,6 +50,7 @@ Ext.onReady(function() {
 					height : 600,
 					width : 700,
 					layout : 'fit',
+					modal : true,
 					items : {
 						xtype : 'grid-activity-product',
 						store : Ext.create('activity.ActivityProductStore', {
@@ -68,10 +69,34 @@ Ext.onReady(function() {
 		text : '删除',
 		disabled : true,
 		handler : function(widget, event) {
-			var rec = grid.getSelectionModel().getSelection()[0];
-			if (rec) {
-				Ext.example.msg('Sell', 'Sell ' + rec.get('company'));
-			}
+			Ext.MessageBox.confirm('Confirm', '确认删除吗?', function(btn, text) {
+				if (btn == 'yes') {
+					var rec = grid.getSelectionModel().getSelection()[0];
+					if (rec) {
+						Ext.Ajax.request({
+							url : ROOT_URL + '/activityext/delete/'+rec.get('id'),
+							method : 'DELETE',
+							success : function(response) {
+								var text = response.responseText;
+								Ext.MessageBox.alert('提示', '创建成功', function() {
+										var p = Ext.getCmp('activityGrid');
+										p.getStore().reload();
+
+								}, this);
+
+							},
+							failure : function(response) {
+								var text = response.responseText;
+								Ext.MessageBox.alert('提示', '创建失败:' + text, function() {
+									var p = Ext.getCmp('activityGrid');
+									p.getStore().reload();
+								}, this);
+							}
+						});
+					}
+				}
+			});
+		
 		}
 	});
 
@@ -82,16 +107,18 @@ Ext.onReady(function() {
 		handler : function(widget, event) {
 			var rec = grid.getSelectionModel().getSelection()[0];
 			if (rec) {
-				console.log(rec.get('email'));
+				console.log(rec.get('rushBeginTime'));
 				//create window
 				var updateActivityWin = Ext.create('Ext.window.Window', {
 					title : '修改活动',
 					height : 600,
 					width : 500,
+					modal : true,
 					layout : 'fit',
+					id:'activity-update-win',
 					items : {
 						xtype : 'form-activity',
-						id : rec.get('id'),
+						activityId : rec.get('id'),
 						activityName : rec.get('activityName'),
 						specialName : rec.get('specialName'),
 						description : rec.get('description'),
@@ -101,8 +128,25 @@ Ext.onReady(function() {
 						imgUrl : rec.get('imgUrl')
 					}
 				}).show();
-				Ext.example.msg('Sell', 'Sell ' + rec.get('company'));
 			}
+		}
+	});
+	
+	var addAction = Ext.create('Ext.Action', {
+		iconCls : 'icon-add', // Use a URL in the icon config
+		text : '新增',
+		handler : function(widget, event) {
+				var updateActivityWin = Ext.create('Ext.window.Window', {
+					title : '修改活动',
+					height : 600,
+					width : 500,
+					layout : 'fit',
+					modal : true,
+					id:'activity-update-win',
+					items : {
+						xtype : 'form-activity'
+					}
+				}).show();
 		}
 	});
 
@@ -110,6 +154,7 @@ Ext.onReady(function() {
 		iconCls : 'buy-button',
 		text : '绑定商品',
 		disabled : true,
+	
 		handler : function(widget, event) {
 			var rec = grid.getSelectionModel().getSelection()[0];
 			if (rec) {
@@ -119,12 +164,15 @@ Ext.onReady(function() {
 					title : '绑定产品',
 					height : 600,
 					width : 700,
+					modal : true,
+					id:'avtivity-product-bind-win',
 					layout : 'fit',
 					items : {
 						xtype : 'grid-product',
 						store : Ext.create('product.ProductStore', {
 
 						}),
+						
 						activityId : rec.get('id')
 					}
 				}).show();
@@ -149,6 +197,7 @@ Ext.onReady(function() {
 	// create the Grid
 	var grid = Ext.create('Ext.grid.Panel', {
 		store : store,
+		 id:"activityGrid",  
 		columnLines : true,
 		columns : [{
 			text : '活动名称',
@@ -208,12 +257,7 @@ Ext.onReady(function() {
 				text : '搜索',
 				scope : this,
 				handler : this.onAddClick
-			}, '->', {
-				iconCls : 'icon-add',
-				text : '新增',
-				scope : this,
-				handler : this.onAddClick
-			}, buyAction, sellAction, updateAction, delAction]
+			}, '->',addAction, buyAction, sellAction, updateAction, delAction]
 		}, {
 			xtype : 'pagingtoolbar',
 			store : store, // GridPanel中使用的数据
@@ -247,10 +291,12 @@ Ext.onReady(function() {
 				buyAction.enable();
 				sellAction.enable();
 				updateAction.enable();
+				delAction.enable();
 			} else {
 				buyAction.disable();
 				sellAction.disable();
 				updateAction.disable();
+				delAction.disable();
 			}
 		}
 	});
