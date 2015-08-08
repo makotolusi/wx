@@ -10,7 +10,7 @@ Ext.define('product.Grid', {
 	me:this,
 	// <example>
 	requires : [ 'Ext.grid.*', 'Ext.data.*', 'Ext.util.*', 'Ext.Action',
-			'Ext.data.*', 'Ext.toolbar.*', 'form.FieldTypes' ],
+			'Ext.data.*', 'Ext.toolbar.*', 'activity.ActivityForm' ],
 
 	
 
@@ -89,7 +89,7 @@ Ext.define('product.Grid', {
 				Ext.Ajax.request({
 					url : ROOT_URL + '/activityext/yesguanlianproduct',
 					method : 'POST',
-					params :   {activityId: 6, productIds: "1", productCodes: "M000001"},
+					params :   obj,
 					success : function(response) {
 						var text = response.responseText;
 						console.log(text);

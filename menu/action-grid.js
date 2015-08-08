@@ -1,4 +1,5 @@
-Ext.require(['Ext.grid.*', 'Ext.data.*', 'Ext.util.*', 'Ext.Action', 'Ext.data.*', 'Ext.toolbar.*', 'form.FieldTypes', 'product.Grid', 'activity.ActivityStore', 'Global', 'activity.ActivityProductGrid']);
+Ext.require(['Ext.grid.*', 'Ext.data.*', 'Ext.util.*', 'Ext.Action', 'Ext.data.*', 'Ext.toolbar.*', 'activity.ActivityForm', 
+             'product.Grid', 'activity.ActivityStore', 'Global', 'activity.ActivityProductGrid']);
 var ROOT_URL = 'http://localhost:8080/mgserver';
 Ext.onReady(function() {
 	Ext.QuickTips.init();
@@ -81,6 +82,7 @@ Ext.onReady(function() {
 		handler : function(widget, event) {
 			var rec = grid.getSelectionModel().getSelection()[0];
 			if (rec) {
+				console.log(rec.get('email'));
 				//create window
 				var updateActivityWin = Ext.create('Ext.window.Window', {
 					title : '修改活动',
@@ -88,7 +90,15 @@ Ext.onReady(function() {
 					width : 500,
 					layout : 'fit',
 					items : {
-						xtype : 'form-fieldtypes'
+						xtype : 'form-activity',
+						id : rec.get('id'),
+						activityName : rec.get('activityName'),
+						specialName : rec.get('specialName'),
+						description : rec.get('description'),
+						rushBeginTime : rec.get('rushBeginTime'),
+						rushEndTime : rec.get('rushEndTime'),
+						rushStatus : rec.get('rushStatus'),
+						imgUrl : rec.get('imgUrl')
 					}
 				}).show();
 				Ext.example.msg('Sell', 'Sell ' + rec.get('company'));

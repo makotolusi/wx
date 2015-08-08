@@ -56,14 +56,16 @@
         themePath,
         i = 3,
         overridePath;
-
+      
     rtl = rtl && rtl.toString() === 'true';
 
     while (i--) {
         path = path.substring(0, path.lastIndexOf('/'));
     }
     // path == root of ext
-        
+    console.log("========");
+    path+="/wx-ext";
+        console.log(path);
     theme = 'ext-theme-' + theme;
     packagePath = path + '/packages/' + theme + '/build/';
     themePath = packagePath + 'resources/' + theme + (rtl ? '-all-rtl' : '-all');

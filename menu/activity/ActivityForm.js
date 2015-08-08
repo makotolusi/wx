@@ -2,9 +2,9 @@
  * This example shows examples of the various supported form field types.
  */
 
-Ext.define('form.FieldTypes', {
+Ext.define('activity.ActivityForm', {
     extend: 'Ext.form.Panel',
-    xtype: 'form-fieldtypes',
+    xtype: 'form-activity',
 
     //<example>
     requires: [
