@@ -1,9 +1,8 @@
 Ext.require(['Ext.grid.*', 'Ext.data.*', 'Ext.util.*', 'Ext.Action', 'Ext.data.*', 'Ext.toolbar.*', 'activity.ActivityForm', 
-             'product.Grid', 'activity.ActivityStore', 'Global', 'activity.ActivityProductGrid']);
-var ROOT_URL = 'http://localhost:8080/mgserver';
+             'product.Grid', 'activity.ActivityStore', 'activity.ActivityProductGrid']);
+
 Ext.onReady(function() {
 	Ext.QuickTips.init();
-
 	// sample static data for the store
 	var myData = [['3m Co', 71.72, 0.02, 0.03, '9/1 12:00am'], ['Alcoa Inc', 29.01, 0.42, 1.47, '9/1 12:00am'], ['Altria Group Inc', 83.81, 0.28, 0.34, '9/1 12:00am'], ['American Express Company', 52.55, 0.01, 0.02, '9/1 12:00am'], ['American International Group, Inc.', 64.13, 0.31, 0.49, '9/1 12:00am'], ['AT&T Inc.', 31.61, -0.48, -1.54, '9/1 12:00am'], ['Boeing Co.', 75.43, 0.53, 0.71, '9/1 12:00am'], ['Caterpillar Inc.', 67.27, 0.92, 1.39, '9/1 12:00am'], ['Citigroup, Inc.', 49.37, 0.02, 0.04, '9/1 12:00am'], ['E.I. du Pont de Nemours and Company', 40.48, 0.51, 1.28, '9/1 12:00am'], ['Exxon Mobil Corp', 68.1, -0.43, -0.64, '9/1 12:00am'], ['General Electric Company', 34.14, -0.08, -0.23, '9/1 12:00am'], ['General Motors Corporation', 30.27, 1.09, 3.74, '9/1 12:00am'], ['Hewlett-Packard Co.', 36.53, -0.03, -0.08, '9/1 12:00am'], ['Honeywell Intl Inc', 38.77, 0.05, 0.13, '9/1 12:00am'], ['Intel Corporation', 19.88, 0.31, 1.58, '9/1 12:00am'], ['International Business Machines', 81.41, 0.44, 0.54, '9/1 12:00am'], ['Johnson & Johnson', 64.72, 0.06, 0.09, '9/1 12:00am'], ['JP Morgan & Chase & Co', 45.73, 0.07, 0.15, '9/1 12:00am'], ['McDonald\'s Corporation', 36.76, 0.86, 2.40, '9/1 12:00am'], ['Merck & Co., Inc.', 40.96, 0.41, 1.01, '9/1 12:00am'], ['Microsoft Corporation', 25.84, 0.14, 0.54, '9/1 12:00am'], ['Pfizer Inc', 27.96, 0.4, 1.45, '9/1 12:00am'], ['The Coca-Cola Company', 45.07, 0.26, 0.58, '9/1 12:00am'], ['The Home Depot, Inc.', 34.64, 0.35, 1.02, '9/1 12:00am'], ['The Procter & Gamble Company', 61.91, 0.01, 0.02, '9/1 12:00am'], ['United Technologies Corporation', 63.26, 0.55, 0.88, '9/1 12:00am'], ['Verizon Communications', 35.57, 0.39, 1.11, '9/1 12:00am'], ['Wal-Mart Stores, Inc.', 45.45, 0.73, 1.63, '9/1 12:00am']];
 
@@ -38,7 +37,7 @@ Ext.onReady(function() {
 	});
 
 	var sellAction = Ext.create('Ext.Action', {
-		icon : '../shared/icons/fam/delete.gif', // Use a URL in the icon config
+		iconCls : 'icon-readd', // Use a URL in the icon config
 		text : '编辑商品',
 		disabled : true,
 		handler : function(widget, event) {
@@ -101,7 +100,7 @@ Ext.onReady(function() {
 	});
 
 	var updateAction = Ext.create('Ext.Action', {
-		icon : '../shared/icons/fam/delete.gif', // Use a URL in the icon config
+		iconCls : 'icon-readd', // Use a URL in the icon config
 		text : '修改',
 		disabled : true,
 		handler : function(widget, event) {
@@ -159,7 +158,8 @@ Ext.onReady(function() {
 			var rec = grid.getSelectionModel().getSelection()[0];
 			if (rec) {
 				//create window
-
+				var productStore=Ext.create('product.ProductStore', {
+				});
 				var win = Ext.create('Ext.window.Window', {
 					title : '绑定产品',
 					height : 600,
@@ -169,10 +169,79 @@ Ext.onReady(function() {
 					layout : 'fit',
 					items : {
 						xtype : 'grid-product',
-						store : Ext.create('product.ProductStore', {
+						store : productStore,
+						dockedItems : [ {
+							xtype : 'toolbar',
 
-						}),
-						
+							items : [ {
+								xtype : 'textfield',
+								name : 'name',
+								id:'productName',
+								fieldLabel : '关键词'
+							}, {
+								iconCls : 'icon-add',
+								text : '搜索',
+								scope : this,
+								handler : function(widget, event) {
+									productStore.load({
+										params : {
+											lk_name : Ext.getCmp('productName').getValue()
+										}
+									});
+							}
+							}, '->',
+							Ext.create('Ext.Action', {
+								icon : '../shared/icons/fam/add.gif', // Use a URL in the icon
+								text : '绑定',
+								id:'bindBtn',
+								disabled : true,
+								handler : function(widget, event) {
+									var obj={};
+									var pGrid=Ext.getCmp('productGrid');
+									var pRows=pGrid.getSelectionModel().getSelection();
+									var pids='';
+									var pcodes='';
+											for (var i = 0; i < pRows.length; i++) {
+												pids+=pRows[i].get('id')+",";
+													pcodes+=pRows[i].get('productCode')+",";
+											
+											}
+									obj.activityId=pGrid.activityId;
+									obj.productIds=pids;
+									obj.productCodes=pcodes;
+											console.log(obj);
+									Ext.Ajax.request({
+										url : ROOT_URL + '/activityext/yesguanlianproduct',
+										method : 'POST',
+										params :   obj,
+										success : function(response) {
+											var text = response.responseText;
+											console.log(text);
+											Ext.MessageBox.alert('提示', '创建成功', function() {
+												var p = Ext.getCmp('productGrid');
+												p.getStore().reload();
+												Ext.getCmp('avtivity-product-bind-win').close();
+											}, this);
+
+										},
+										failure : function(response) {
+											var text = response.responseText;
+											console.log(text);
+											Ext.MessageBox.alert('提示', '创建失败-' + text, function() {
+												var p = Ext.getCmp('productGrid');
+												p.getStore().reload();
+												Ext.getCmp('avtivity-product-bind-win').close();
+											}, this);
+										}
+									});
+								}
+							}) ]
+						}, {
+							xtype : 'pagingtoolbar',
+							dock : 'bottom',
+							store : productStore, // GridPanel中使用的数据
+							displayInfo : true
+						} ],
 						activityId : rec.get('id')
 					}
 				}).show();
@@ -228,6 +297,7 @@ Ext.onReady(function() {
 			text : '抢购状态',
 			width : 150,
 			sortable : false,
+			hidden:true,
 			dataIndex : 'rushStatus'
 		}, {
 			text : '图片预览',
@@ -244,19 +314,81 @@ Ext.onReady(function() {
 			width : 150,
 			sortable : false,
 			dataIndex : 'entertime'
-		}],
+		},{
+			text : "操作",
+			xtype : 'actioncolumn',
+			width : 120,
+			items : [ {
+				iconCls: 'icon-ok',  // Use a URL in the icon config
+                tooltip: '启停',
+                getClass : function(v, meta, record) {
+    				console.log(record.get('rushStatus'));
+    				if (record.get('rushStatus') == '0'||record.get('rushStatus') == undefined) {
+    					return 'icon-cancel';
+    				} else {
+    					return 'icon-ok';
+    				}
+    			},
+                handler: function(grid, rowIndex, colIndex) {
+                	var rec = grid.getStore().getAt(rowIndex);
+    				var str = '';
+    				var status=0;
+    				console.log(rec.get('rushStatus'));
+    				if (rec.get('rushStatus') == '1') {
+    					str = "确认停用吗?";
+    					status=0;
+    				} else {
+    					str = "确认启用吗?";
+    					status=1;
+    				}
+    				
+    				Ext.MessageBox.confirm('确认', str, function(btn, text) {
+    					  var obj={};
+    					   obj.id=rec.get('id');
+    					   obj.rushStatus=status
+    					   console.log(obj);
+    					if (btn == 'yes') {
+    						Ext.Ajax.request({
+    							url : ROOT_URL + '/activityext/updActivityStatus',
+    							method : 'POST',
+    							params :   obj,
+    							success : function(response) {
+    								var text = response.responseText;
+    								Ext.MessageBox.alert('提示', '操作成功', function() {
+    									grid.getStore().reload();
+    								}, this);
+
+    							},
+    							failure : function(response) {
+    								var text = response.responseText;
+    								Ext.MessageBox.alert('提示', '失败-' + text, function() {
+    								}, this);
+    							}
+    						});
+    					}
+    				}, this);
+                }
+            }]
+		}] ,
 		dockedItems : [{
 			xtype : 'toolbar',
 
 			items : [{
 				xtype : 'textfield',
 				name : 'name',
+				id:'activityName',
 				fieldLabel : '关键词'
 			}, {
-				iconCls : 'icon-add',
+				iconCls : 'icon-searchpp',
 				text : '搜索',
 				scope : this,
-				handler : this.onAddClick
+				handler : function(widget, event) {
+					grid.getStore().load({
+						params : {
+							lk_activityName : Ext.getCmp('activityName').getValue()
+						}
+					});
+			}
 			}, '->',addAction, buyAction, sellAction, updateAction, delAction]
 		}, {
 			xtype : 'pagingtoolbar',
@@ -280,10 +412,7 @@ Ext.onReady(function() {
 		stateful : false
 	});
 
-	//product list
-	var products = Ext.create('Ext.grid.Panel', {
 
-	});
 
 	grid.getSelectionModel().on({
 		selectionchange : function(sm, selections) {

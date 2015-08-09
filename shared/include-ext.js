@@ -63,13 +63,15 @@
         path = path.substring(0, path.lastIndexOf('/'));
     }
     // path == root of ext
-    console.log("========");
+
     path+="/wx-ext";
-        console.log(path);
+    console.log("path:"+path);
     theme = 'ext-theme-' + theme;
     packagePath = path + '/packages/' + theme + '/build/';
     themePath = packagePath + 'resources/' + theme + (rtl ? '-all-rtl' : '-all');
-
+    console.log("theme:"+theme);
+    console.log("packagePath:"+packagePath);
+    console.log("themePath:"+themePath);
     if (includeCSS) {
         document.write('<link rel="stylesheet" type="text/css" href="' +
                             themePath + '-debug.css"/>');
@@ -77,7 +79,8 @@
 
     document.write('<script type="text/javascript" src="' + path + '/ext-all' +
                             (rtl ? '-rtl' : '') + '.js"></script>');
-
+    console.log('<script type="text/javascript" src="' + path + '/ext-all' +
+            (rtl ? '-rtl' : '') + '.js"></script>');
     if (hasOverrides) {
         // since document.write('<script>') does not block execution in IE, we need to 
         // makes sure we prevent ext-theme-neptune.js from executing before ext-all.js
@@ -88,7 +91,7 @@
         // To work around this we use the _beforereadyhandler hook to load the neptune
         // overrides dynamically after Ext has been defined.
         overridePath = packagePath + theme + (repoDevMode ? '-debug' : '') + '.js';
-
+        console.log('overridePath:'+overridePath);
         if (repoDevMode &&  window.ActiveXObject) {
             Ext = {
                 _beforereadyhandler: function() {
@@ -98,6 +101,8 @@
         } else {
             document.write('<script type="text/javascript" src="' +
                             overridePath + '" defer></script>');
+            console.log('<script type="text/javascript" src="' +
+                    overridePath + '" defer></script>');
         }
     }
 

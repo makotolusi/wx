@@ -162,52 +162,54 @@ Ext.define('activity.ActivityProductGrid', {
 			text : '搜索',
 			scope : this,
 			handler : this.onAddClick
-		}, '->', Ext.create('Ext.Action', {
-			icon : '../shared/icons/fam/add.gif', // Use a URL in the icon
-			text : '绑定',
-			id:'bindBtn',
-			disabled : true,
-			handler : function(widget, event) {
-				var obj={};
-				var pGrid=Ext.getCmp('productGrid');
-				var pRows=pGrid.getSelectionModel().getSelection();
-				var pids='';
-				var pcodes='';
-						for (var i = 0; i < pRows.length; i++) {
-							pids+=pRows[i].get('id')+",";
-								pcodes+=pRows[i].get('productCode')+",";
-						
-						}
-				obj.activityId=pGrid.activityId;
-				obj.productIds=pids;
-				obj.productCodes=pcodes;
-						console.log(obj);
-				Ext.Ajax.request({
-					url : ROOT_URL + '/activityext/yesguanlianproduct',
-					method : 'POST',
-					params :   obj,
-					success : function(response) {
-						var text = response.responseText;
-						console.log(text);
-						Ext.MessageBox.alert('提示', '创建成功', function() {
-							var p = Ext.getCmp('activityProductGrid');
-							p.getStore().reload();
-							Ext.getCmp('avtivity-product-bind-win').close();
-						}, this);
-
-					},
-					failure : function(response) {
-						var text = response.responseText;
-						console.log(text);
-						Ext.MessageBox.alert('提示', '创建失败-' + text, function() {
-							var p = Ext.getCmp('activityProductGrid');
-							p.getStore().reload();
-							Ext.getCmp('avtivity-product-bind-win').close();
-						}, this);
-					}
-				});
-			}
-		}) ]
+		}, '->'
+//		Ext.create('Ext.Action', {
+//			icon : '../shared/icons/fam/add.gif', // Use a URL in the icon
+//			text : '绑定',
+//			id:'bindBtn',
+//			disabled : true,
+//			handler : function(widget, event) {
+//				var obj={};
+//				var pGrid=Ext.getCmp('productGrid');
+//				var pRows=pGrid.getSelectionModel().getSelection();
+//				var pids='';
+//				var pcodes='';
+//						for (var i = 0; i < pRows.length; i++) {
+//							pids+=pRows[i].get('id')+",";
+//								pcodes+=pRows[i].get('productCode')+",";
+//						
+//						}
+//				obj.activityId=pGrid.activityId;
+//				obj.productIds=pids;
+//				obj.productCodes=pcodes;
+//						console.log(obj);
+//				Ext.Ajax.request({
+//					url : ROOT_URL + '/activityext/yesguanlianproduct',
+//					method : 'POST',
+//					params :   obj,
+//					success : function(response) {
+//						var text = response.responseText;
+//						console.log(text);
+//						Ext.MessageBox.alert('提示', '创建成功', function() {
+//							var p = Ext.getCmp('activityProductGrid');
+//							p.getStore().reload();
+//							Ext.getCmp('avtivity-product-bind-win').close();
+//						}, this);
+//
+//					},
+//					failure : function(response) {
+//						var text = response.responseText;
+//						console.log(text);
+//						Ext.MessageBox.alert('提示', '创建失败-' + text, function() {
+//							var p = Ext.getCmp('activityProductGrid');
+//							p.getStore().reload();
+//							Ext.getCmp('avtivity-product-bind-win').close();
+//						}, this);
+//					}
+//				});
+//			}
+//		}) 
+		]
 	}, {
 		xtype : 'pagingtoolbar',
 		dock : 'bottom',
